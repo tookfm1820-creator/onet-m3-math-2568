@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>O-NET ม.3 คณิตศาสตร์ 2568 · สพป.หนองบัวลำภู เขต 2</title>
+<style>
+.viz-root {
+  color-scheme: light;
+  --page: #f9f9f7;
+  --surface-1: #fcfcfb;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #6f6d68;
+  --axis-muted: #898781;
+  --grid: #e1e0d9;
+  --baseline: #c3c2b7;
+  --border: rgba(11,11,11,0.10);
+  --s-district: #2a78d6;
+  --s-province: #eb6834;
+  --s-nation: #1baf7a;
+  --s-small: #6250d6;
+  --s-medium: #eda100;
+  --s-school: #e34948;
+  --heat: 42,120,214;
+  --good-text: #006300;
+  --critical: #d03b3b;
+  --good: #0ca30c;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) .viz-root {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface-1: #1a1a19;
+    --text-primary: #f0efec;
+    --text-secondary: #c3c2b7;
+    --text-muted: #a3a29a;
+    --grid: #2c2c2a;
+    --baseline: #383835;
+    --border: rgba(255,255,255,0.10);
+    --s-district: #3987e5;
+    --s-province: #d95926;
+    --s-nation: #199e70;
+    --s-small: #9085e9;
+    --s-medium: #c98500;
+    --s-school: #e66767;
+    --heat: 57,135,229;
+    --good-text: #0ca30c;
+  }
+}
+:root[data-theme="dark"] .viz-root {
+  color-scheme: dark;
+  --page: #0d0d0d;
+  --surface-1: #1a1a19;
+  --text-primary: #f0efec;
+  --text-secondary: #c3c2b7;
+  --text-muted: #a3a29a;
+  --grid: #2c2c2a;
+  --baseline: #383835;
+  --border: rgba(255,255,255,0.10);
+  --s-district: #3987e5;
+  --s-province: #d95926;
+  --s-nation: #199e70;
+  --s-small: #9085e9;
+  --s-medium: #c98500;
+  --s-school: #e66767;
+  --heat: 57,135,229;
+  --good-text: #0ca30c;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+.viz-root {
+  font-family: system-ui, -apple-system, "Segoe UI", "Leelawadee UI", "Noto Sans Thai", sans-serif;
+  background: var(--page); color: var(--text-primary);
+  min-height: 100vh; line-height: 1.55; font-size: 15px;
+}
+.wrap { max-width: 1120px; margin: 0 auto; padding: 24px 20px 64px; }
+header.top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+h1 { font-size: 26px; margin: 0 0 4px; font-weight: 700; }
+.sub { color: var(--text-secondary); margin: 0; }
+nav.tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 20px 0 8px; position: sticky; top: 0; background: var(--page); padding: 8px 0; z-index: 5; border-bottom: 1px solid var(--border); }
+nav.tabs a { text-decoration: none; color: var(--text-secondary); padding: 6px 12px; border-radius: 8px; font-size: 14px; }
+nav.tabs a:hover { background: var(--border); color: var(--text-primary); }
+nav.tabs a.active { background: var(--text-primary); color: var(--surface-1); }
+button, select, input {
+  font: inherit; font-size: 14px; color: var(--text-primary); background: var(--surface-1);
+  border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px;
+}
+button { cursor: pointer; }
+button:hover { background: var(--border); }
+button[aria-pressed="true"] { background: var(--text-primary); color: var(--surface-1); }
+section.view { display: none; }
+section.view.active { display: block; }
+h2 { font-size: 20px; margin: 24px 0 4px; }
+h3 { font-size: 16px; margin: 0 0 2px; }
+.card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 18px 18px 14px; margin: 14px 0; }
+.card .desc { color: var(--text-secondary); font-size: 14px; margin: 0 0 10px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 14px; }
+.tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+.tile .k { color: var(--text-secondary); font-size: 13px; }
+.tile .v { font-size: 30px; font-weight: 700; line-height: 1.2; }
+.tile .d { font-size: 13px; color: var(--text-secondary); }
+.neg { color: var(--critical); font-weight: 600; }
+.pos { color: var(--good-text); font-weight: 600; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--text-secondary); margin: 0 0 6px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.chart svg { display: block; width: 100%; overflow: visible; }
+.chart text { font-family: inherit; }
+details.tbl { margin-top: 8px; font-size: 13px; }
+details.tbl summary { cursor: pointer; color: var(--text-secondary); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { padding: 6px 8px; border-bottom: 1px solid var(--border); text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+th { color: var(--text-secondary); font-weight: 600; }
+.scroll { overflow-x: auto; }
+#schoolTable th { cursor: pointer; user-select: none; position: sticky; top: 0; background: var(--surface-1); }
+#schoolTable th.sorted::after { content: " ▾"; }
+#schoolTable th.sorted.asc::after { content: " ▴"; }
+#schoolTable tbody tr { cursor: pointer; }
+#schoolTable tbody tr:hover td { outline: 1px solid var(--border); }
+#schoolTable td.name { white-space: normal; min-width: 200px; }
+td.hi { font-weight: 700; }
+.tag { font-size: 11px; color: var(--text-muted); }
+.controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+.controls label { font-size: 13px; color: var(--text-secondary); }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+.ins h3 { display: flex; align-items: center; gap: 8px; }
+.ins ul { margin: 6px 0 0; padding-left: 20px; }
+.ins li { margin: 4px 0; }
+.icon { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; color: #fff; font-size: 13px; font-weight: 700; }
+.icon.good { background: var(--good); }
+.icon.crit { background: var(--critical); }
+.icon.info { background: var(--s-district); }
+.note { font-size: 13px; color: var(--text-muted); }
+#tip {
+  position: fixed; pointer-events: none; z-index: 50; display: none;
+  background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 10px; font-size: 13px; box-shadow: 0 4px 16px rgba(0,0,0,.15); min-width: 160px;
+}
+#tip .t { font-weight: 600; margin-bottom: 4px; }
+#tip .r { display: flex; justify-content: space-between; gap: 14px; }
+#tip .r span:first-child { display: inline-flex; align-items: center; gap: 6px; color: var(--text-secondary); }
+#tip .r span:last-child { font-variant-numeric: tabular-nums; font-weight: 600; }
+footer { margin-top: 32px; font-size: 12px; color: var(--text-muted); }
+</style>
+</head>
+<body>
+<div class="viz-root">
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>ผล O-NET ม.3 วิชาคณิตศาสตร์ ปีการศึกษา 2568</h1>
+      <p class="sub">สพป.หนองบัวลำภู เขต 2 · ผู้เข้าสอบ 512 คน จาก 32 โรงเรียน (อ.นากลาง นาวัง สุวรรณคูหา)</p>
+    </div>
+    <button id="themeBtn" type="button" aria-label="สลับธีมสว่าง/มืด">◐ ธีม</button>
+  </header>
+
+  <nav class="tabs" aria-label="เมนู">
+    <a href="#overview" data-view="overview">ภาพรวม</a>
+    <a href="#standards" data-view="standards">มาตรฐานการเรียนรู้</a>
+    <a href="#size" data-view="size">ขนาดโรงเรียน</a>
+    <a href="#schools" data-view="schools">รายโรงเรียน</a>
+    <a href="#insights" data-view="insights">จุดเด่น / จุดพัฒนา</a>
+  </nav>
+
+  <!-- ภาพรวม -->
+  <section class="view" id="v-overview">
+    <div class="tiles" id="tiles"></div>
+    <div class="card">
+      <h3>คะแนนเฉลี่ยรายสาระ เทียบเขต · จังหวัด · ประเทศ</h3>
+      <p class="desc">ทุกสาระยังต่ำกว่าระดับประเทศ แต่สาระที่ 3 (สถิติและความน่าจะเป็น) สูงกว่าค่าเฉลี่ยจังหวัด</p>
+      <div class="legend" data-legend="district,province,nation"></div>
+      <div class="chart" id="c-strand"></div>
+      <details class="tbl"><summary>ดูตารางข้อมูล</summary><div class="scroll" id="t-strand"></div></details>
+    </div>
+    <div class="card">
+      <h3>การกระจายของคะแนน (S.D.)</h3>
+      <p class="desc">S.D. ของเขตแคบกว่าระดับประเทศทุกสาระ คะแนนนักเรียนจึงกระจุกตัวกันมากกว่า และมีกลุ่มคะแนนสูงไม่มาก</p>
+      <div class="scroll" id="t-sd"></div>
+    </div>
+  </section>
+
+  <!-- มาตรฐาน -->
+  <section class="view" id="v-standards">
+    <div class="card">
+      <h3>คะแนนเฉลี่ยรายมาตรฐาน</h3>
+      <p class="desc">ค 2.1 การวัด ได้คะแนนต่ำที่สุดเมื่อเทียบกับระดับประเทศ ส่วน ค 3.1 สถิติ สูงกว่าจังหวัด</p>
+      <div class="legend" data-legend="district,province,nation"></div>
+      <div class="chart" id="c-std"></div>
+      <details class="tbl"><summary>ดูตารางข้อมูล</summary><div class="scroll" id="t-std"></div></details>
+    </div>
+    <div class="card">
+      <h3>ส่วนต่างของเขต 2 เทียบกับ <span id="gapLabel">ระดับประเทศ</span></h3>
+      <p class="desc">ค่าติดลบ = เขตต่ำกว่าระดับที่เทียบ (เรียงจากห่างมากไปน้อย)</p>
+      <div class="controls">
+        <button type="button" data-gap="nation" aria-pressed="true">เทียบประเทศ</button>
+        <button type="button" data-gap="province" aria-pressed="false">เทียบจังหวัด</button>
+      </div>
+      <div class="chart" id="c-gap"></div>
+    </div>
+  </section>
+
+  <!-- ขนาด -->
+  <section class="view" id="v-size">
+    <div class="card">
+      <h3>โรงเรียนขนาดเล็ก (208 คน) เทียบขนาดกลาง (304 คน) รายมาตรฐาน</h3>
+      <p class="desc">โรงเรียนขนาดเล็กทำได้สูงกว่าระดับประเทศใน ค 2.2 เรขาคณิต และ ค 3.1 สถิติ ส่วนขนาดกลางทำได้ดีกว่าใน ค 1.1, ค 1.2 และ ค 2.1</p>
+      <div class="legend" data-legend="small,medium,nation"></div>
+      <div class="chart" id="c-size"></div>
+      <details class="tbl"><summary>ดูตารางข้อมูล</summary><div class="scroll" id="t-size"></div></details>
+    </div>
+  </section>
+
+  <!-- รายโรงเรียน -->
+  <section class="view" id="v-schools">
+    <div class="card">
+      <h3>เจาะรายโรงเรียน</h3>
+      <p class="desc">เลือกโรงเรียน (หรือคลิกแถวในตารางด้านล่าง) เพื่อเทียบคะแนนรายมาตรฐานกับค่าเฉลี่ยเขตและประเทศ</p>
+      <div class="controls">
+        <label for="schoolSel">โรงเรียน</label>
+        <select id="schoolSel"></select>
+        <span class="note" id="schoolInfo"></span>
+      </div>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--s-school)"></i>โรงเรียนที่เลือก (แท่ง)</span>
+        <span><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="var(--s-district)" stroke="var(--surface-1)" stroke-width="2"/></svg>เขต 2 (วงกลม)</span>
+        <span><svg width="14" height="14"><path d="M7 1 L13 7 L7 13 L1 7Z" fill="var(--s-nation)" stroke="var(--surface-1)" stroke-width="2"/></svg>ประเทศ (ข้าวหลามตัด)</span>
+      </div>
+      <div class="chart" id="c-school"></div>
+    </div>
+    <div class="card">
+      <h3>ตารางคะแนนรายโรงเรียน</h3>
+      <p class="desc">สีพื้นเข้ม = คะแนนสูง · <b>ตัวหนา</b> = สูงกว่าค่าเฉลี่ยระดับประเทศ · คลิกหัวคอลัมน์เพื่อเรียงลำดับ</p>
+      <div class="controls">
+        <label for="fAmp">อำเภอ</label>
+        <select id="fAmp"><option value="">ทั้งหมด</option><option>นากลาง</option><option>นาวัง</option><option>สุวรรณคูหา</option></select>
+        <label for="fSize">ขนาด</label>
+        <select id="fSize"><option value="">ทั้งหมด</option><option>เล็ก</option><option>กลาง</option></select>
+        <button type="button" data-mode="strand" aria-pressed="true">รายสาระ</button>
+        <button type="button" data-mode="std" aria-pressed="false">รายมาตรฐาน</button>
+        <input id="fQ" type="search" placeholder="ค้นหาชื่อโรงเรียน" aria-label="ค้นหาชื่อโรงเรียน">
+      </div>
+      <div class="scroll" style="max-height:620px"><table id="schoolTable"></table></div>
+      <p class="note">“เฉลี่ย 3 สาระ” คือค่าเฉลี่ยอย่างง่ายของคะแนน 3 สาระ ใช้จัดลำดับคร่าว ๆ เท่านั้น ไม่ใช่คะแนนรวมทางการ · โรงเรียนที่มีผู้สอบน้อยกว่า 10 คน คะแนนอาจแกว่งมาก</p>
+    </div>
+  </section>
+
+  <!-- สรุป -->
+  <section class="view" id="v-insights">
+    <div class="grid2">
+      <div class="card ins">
+        <h3><span class="icon good" aria-hidden="true">✓</span>จุดเด่น</h3>
+        <ul>
+          <li><b>ค 3.1 สถิติ</b> สูงกว่าจังหวัด +2.24 และห่างจากประเทศเพียง −1.03</li>
+          <li><b>ค 1.1 จำนวนและระบบจำนวน</b> เท่ากับค่าเฉลี่ยจังหวัด และห่างจากประเทศเพียง −1.79</li>
+          <li><b>สาระที่ 3</b> เป็นสาระเดียวที่เขตสูงกว่าค่าเฉลี่ยจังหวัด (19.09 เทียบกับ 17.79)</li>
+          <li><b>โรงเรียนขนาดเล็ก</b> ได้ ค 2.2 (29.45) และ ค 3.1 (20.48) สูงกว่าระดับประเทศ</li>
+          <li><b>บ้านโนนป่าหว้านเชียงฮาย</b> สูงกว่าระดับประเทศทั้ง 3 สาระ (52.19 / 32.11 / 46.67) จึงเป็นต้นแบบที่ควรถอดบทเรียน</li>
+        </ul>
+      </div>
+      <div class="card ins">
+        <h3><span class="icon crit" aria-hidden="true">!</span>จุดที่ต้องพัฒนา</h3>
+        <ul>
+          <li><b>ค 2.1 การวัด</b> ต่ำกว่าประเทศ −7.86 และต่ำกว่าจังหวัด −3.79 ถือเป็นจุดอ่อนอันดับ 1 หลายโรงเรียนได้ต่ำกว่า 10 (รวมถึงโรงเรียนที่คะแนนสูงสุด)</li>
+          <li><b>ค 1.3 สมการและอสมการ</b> ต่ำกว่าประเทศ −6.02</li>
+          <li><b>ค 3.2 ความน่าจะเป็น</b> −4.48 และ <b>ค 1.2 พีชคณิต</b> −3.80 โดยมี 3 โรงเรียนที่ได้ ค 3.2 = 0.00</li>
+          <li>มีโรงเรียนที่ได้ <b>0.00 ทั้งมาตรฐาน</b> ได้แก่ ค 1.1 (บ้านโนนม่วง, เทพคีรีพิทยาคม) และ ค 2.1 กับ ค 3.1 (บ้านคลองเจริญ)</li>
+          <li><b>โรงเรียนขนาดกลาง</b> อ่อนเรื่องเรขาคณิต (23.77) และสถิติ (14.33)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card ins">
+      <h3><span class="icon info" aria-hidden="true">→</span>ข้อเสนอแนะ</h3>
+      <ul>
+        <li><b>ลำดับที่ 1:</b> จัดอบรมหรือทำสื่อระดับเขตเรื่อง <b>การวัด (ค 2.1)</b> และ <b>สมการ/อสมการ (ค 1.3)</b></li>
+        <li><b>จุดคานงัด:</b> บ้านโคกทุ่งน้อย มีนักเรียน 86 คน (17% ของเขต) แต่ค่าเฉลี่ยยังต่ำกว่าเขต ถ้ายกระดับได้ ค่าเฉลี่ยทั้งเขตจะขยับมาก รองลงมาคือบ้านหนองด่าน (30 คน) และบ้านหินฮาวน้ำกงวิทยา (28 คน)</li>
+        <li>ตั้ง PLC ให้ครูโรงเรียนบ้านโนนป่าหว้านเชียงฮายแลกเปลี่ยนวิธีสอนกับครูในเขต</li>
+        <li>ตรวจสอบว่าโรงเรียนที่ได้ 0.00 ในบางมาตรฐานสอนครบตัวชี้วัดตามหลักสูตรหรือยัง</li>
+        <li>ติดตามโรงเรียนกลุ่มคะแนนต่ำ ได้แก่ บ้านกุดฮู, บ้านนาด่าน, บ้านกุดผึ้ง, บ้านหินฮาวน้ำกงวิทยา และบ้านเก่ากลอยกุดกระสู้</li>
+        <li>โรงเรียนที่มีผู้สอบน้อยกว่า 10 คน ควรดูแนวโน้มหลายปีประกอบก่อนสรุปผล</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>ที่มา: รายงานผลการทดสอบทางการศึกษาระดับชาติขั้นพื้นฐาน (O-NET) ชั้น ม.3 ปีการศึกษา 2568 วิชาคณิตศาสตร์ (รหัส 94) ค่าสถิติแยกตามสาระและมาตรฐานการเรียนรู้ ระดับเขตพื้นที่และระดับโรงเรียน</footer>
+</div>
+<div id="tip" role="tooltip"></div>
+</div>
+
+<script>
+const SERIES = {
+  district: { name: 'เขต 2', color: 'var(--s-district)' },
+  province: { name: 'จังหวัดหนองบัวลำภู', color: 'var(--s-province)' },
+  nation:   { name: 'ประเทศ', color: 'var(--s-nation)' },
+  small:    { name: 'ร.ร.ขนาดเล็ก', color: 'var(--s-small)' },
+  medium:   { name: 'ร.ร.ขนาดกลาง', color: 'var(--s-medium)' },
+};
+const STRANDS = ['สาระ 1 จำนวนและพีชคณิต', 'สาระ 2 การวัดและเรขาคณิต', 'สาระ 3 สถิติและความน่าจะเป็น'];
+const STRAND_SHORT = ['สาระ 1', 'สาระ 2', 'สาระ 3'];
+const STRAND = {
+  nation: [27.25, 28.70, 21.18], province: [23.74, 26.12, 17.79], district: [22.97, 24.30, 19.09],
+  small: [22.30, 26.37, 22.46], medium: [23.42, 22.88, 16.79],
+  sdNation: [18.95, 19.07, 24.42], sdDistrict: [15.47, 15.01, 20.91], sdProvince: [15.90, 16.51, 20.77],
+};
+const STDS = ['ค 1.1 จำนวนและระบบจำนวน', 'ค 1.2 แบบรูป ความสัมพันธ์ พีชคณิต', 'ค 1.3 สมการและอสมการ', 'ค 2.1 การวัด', 'ค 2.2 เรขาคณิต', 'ค 3.1 สถิติ', 'ค 3.2 ความน่าจะเป็น'];
+const STD_SHORT = ['ค 1.1', 'ค 1.2', 'ค 1.3', 'ค 2.1', 'ค 2.2', 'ค 3.1', 'ค 3.2'];
+const STD = {
+  nation:   [24.06, 29.09, 28.54, 27.49, 29.17, 17.86, 28.70],
+  province: [22.23, 26.96, 23.45, 23.42, 27.15, 14.59, 25.01],
+  district: [22.27, 25.29, 22.52, 19.63, 26.08, 16.83, 24.22],
+  small:    [20.70, 22.12, 23.37, 18.27, 29.45, 20.48, 26.92],
+  medium:   [23.33, 27.47, 21.94, 20.56, 23.77, 14.33, 22.37],
+};
+// [รหัส, ชื่อ, อำเภอ, ขนาด, ผู้สอบ, สาระ1-3, ค1.1..ค3.2]
+const SCHOOLS = [
+['1039020007','กุดแห่วิทยา','นากลาง','กลาง',27,21.74,24.48,21.57,19.30,27.78,20.96,22.22,25.33,14.73,37.04],
+['1039020017','ดงสวรรค์วิทยา','นากลาง','กลาง',12,27.33,24.09,10.89,26.88,41.67,22.17,41.67,17.42,12.02,8.33],
+['1039020001','บ้านกุดดินจี่','นากลาง','กลาง',21,29.19,23.33,8.76,38.71,28.57,23.52,14.29,26.76,6.31,14.29],
+['1039020012','บ้านเก่ากลอยกุดกระสู้','นากลาง','เล็ก',15,14.73,20.19,20.43,16.34,10.00,15.53,6.67,25.33,11.78,40.00],
+['1039020029','บ้านโนนม่วง','นากลาง','เล็ก',8,15.44,43.48,15.32,0.00,37.50,16.63,43.75,43.38,16.57,12.50],
+['1039020026','บ้านโนนเมือง','นากลาง','เล็ก',19,25.00,27.73,29.46,24.19,34.21,22.00,26.32,28.26,23.87,42.11],
+['1039020008','บ้านป่าแดงงาม','นากลาง','กลาง',11,40.23,23.78,16.72,36.95,27.27,47.18,18.18,25.91,16.07,18.18],
+['1039020027','บ้านภูพระโนนผักหวาน','นากลาง','กลาง',3,19.00,36.71,20.43,30.65,0.00,19.00,33.33,38.00,29.46,0.00],
+['1039020042','บ้านหนองกุงศรีโพธิ์ศรีสมพร','นากลาง','เล็ก',11,14.68,28.79,13.93,16.72,13.64,13.82,27.27,29.36,16.07,9.09],
+['1039020021','บ้านหนองด่าน','นากลาง','กลาง',30,16.42,25.70,16.61,19.73,15.00,14.90,21.67,27.23,16.59,16.67],
+['1039020003','หนองแต้ศึกษาประชาสรรค์','นากลาง','เล็ก',18,26.00,20.49,13.62,31.09,16.67,26.39,16.67,21.94,17.18,5.56],
+['1039020106','ชุมชนวังปลาป้อมวิทยศึกษา','นาวัง','เล็ก',6,28.50,29.83,10.22,30.65,25.00,28.50,16.67,34.83,14.73,0.00],
+['1039020085','เทพคีรีพิทยาคม','นาวัง','เล็ก',7,19.36,27.54,17.51,0.00,42.86,22.43,50.00,19.00,18.94,14.29],
+['1039020091','บ้านโคกนาเหล่า','นาวัง','เล็ก',10,14.25,26.52,36.77,15.32,10.00,15.20,25.00,27.10,22.09,70.00],
+['1039020097','บ้านวังสำราญ','นาวัง','เล็ก',7,26.14,31.47,21.89,31.80,14.29,27.14,21.43,35.29,12.62,42.86],
+['1039020057','ชุมชนหนองบัวน้อยโนนชาติหนองเห็นวิทยา','สุวรรณคูหา','กลาง',9,37.50,20.69,17.92,48.57,44.44,28.00,27.78,18.00,16.02,22.22],
+['1039020071','โนนปอแดงวิทยา','สุวรรณคูหา','เล็ก',12,16.83,33.27,18.55,20.43,8.33,17.83,20.83,38.00,12.02,33.33],
+['1039020048','บ้านกุดผึ้ง','สุวรรณคูหา','เล็ก',9,14.78,22.95,17.03,10.22,11.11,19.00,11.11,27.44,24.55,0.00],
+['1039020055','บ้านกุดฮู','สุวรรณคูหา','เล็ก',12,12.67,14.92,12.77,7.66,16.67,14.25,8.33,17.42,14.73,8.33],
+['1039020078','บ้านคลองเจริญ','สุวรรณคูหา','เล็ก',3,30.17,9.18,10.22,30.65,33.33,28.67,0.00,12.67,0.00,33.33],
+['1039020069','บ้านโคกทุ่งน้อย','สุวรรณคูหา','กลาง',86,24.65,21.30,18.81,18.90,33.14,24.99,26.74,19.23,18.39,19.77],
+['1039020077','บ้านโคกนกสาริกา','สุวรรณคูหา','เล็ก',15,17.93,25.70,25.05,14.30,20.00,19.40,13.33,30.40,27.29,20.00],
+['1039020059','บ้านเซินราษฎร์เกษมศรี','สุวรรณคูหา','กลาง',24,32.19,22.86,10.22,40.26,16.67,33.08,10.42,27.58,7.36,16.67],
+['1039020073','บ้านดงบังมวลชนรังสรรค์','สุวรรณคูหา','เล็ก',10,22.80,27.54,30.65,27.58,15.00,22.80,5.00,36.10,22.09,50.00],
+['1039020049','บ้านนาไก่นาคำน้อยวิทยา','สุวรรณคูหา','เล็ก',12,17.63,27.84,26.21,15.32,20.83,17.83,20.83,30.50,15.70,50.00],
+['1039020058','บ้านนาด่าน','สุวรรณคูหา','กลาง',19,13.00,18.84,11.29,12.90,15.79,12.00,7.89,23.00,6.98,21.05],
+['1039020061','บ้านนาดีค่ายสว่างวิทยา','สุวรรณคูหา','กลาง',21,12.67,26.40,17.51,10.22,26.19,9.05,19.05,29.19,12.62,28.57],
+['1039020046','บ้านโนนป่าหว้านเชียงฮาย','สุวรรณคูหา','เล็ก',16,52.19,32.11,46.67,49.80,34.38,60.44,6.25,41.94,53.49,31.25],
+['1039020066','บ้านโนนสมบูรณ์','สุวรรณคูหา','เล็ก',5,34.20,11.74,12.26,18.39,20.00,49.40,10.00,12.40,8.84,20.00],
+['1039020054','บ้านผาซ่อนโชคชัย','สุวรรณคูหา','กลาง',13,32.15,24.36,25.93,25.93,53.85,27.77,15.38,27.77,23.79,30.77],
+['1039020062','บ้านวิจิตรพัฒนา','สุวรรณคูหา','เล็ก',13,20.46,29.65,16.50,16.50,42.31,14.62,23.08,32.15,16.99,15.38],
+['1039020068','บ้านหินฮาวน้ำกงวิทยา','สุวรรณคูหา','กลาง',28,15.70,20.65,18.61,18.61,19.64,12.39,12.50,23.75,11.05,35.71],
+].map(r => ({ code: r[0], name: r[1], amp: r[2], size: r[3], n: r[4], strand: r.slice(5, 8), std: r.slice(8, 15),
+  avg: (r[5] + r[6] + r[7]) / 3 }));
+
+const f2 = v => v.toFixed(2);
+const sgn = v => (v > 0 ? '+' : v < 0 ? '−' : '±') + Math.abs(v).toFixed(2);
+const NS = 'http://www.w3.org/2000/svg';
+const el = (tag, attrs = {}, parent) => {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+};
+const swatch = c => `<i class="sw" style="background:${c}"></i>`;
+
+// ---------- tooltip ----------
+const tip = document.getElementById('tip');
+function showTip(ev, title, rows) {
+  tip.innerHTML = `<div class="t">${title}</div>` + rows.map(r =>
+    `<div class="r"><span>${r.color ? swatch(r.color) : ''}${r.label}</span><span>${r.value}</span></div>`).join('');
+  tip.style.display = 'block';
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  let x = ev.clientX + 14, y = ev.clientY + 14;
+  if (x + w > innerWidth - 8) x = ev.clientX - w - 14;
+  if (y + h > innerHeight - 8) y = ev.clientY - h - 14;
+  tip.style.left = x + 'px'; tip.style.top = y + 'px';
+}
+const hideTip = () => (tip.style.display = 'none');
+
+// bar path: square at baseline, 4px rounded at data end
+function barPath(x0, y, w, h, r = 4) {
+  if (w <= 0) return '';
+  r = Math.min(r, w, h / 2);
+  return `M${x0},${y}h${w - r}a${r},${r} 0 0 1 ${r},${r}v${h - 2 * r}a${r},${r} 0 0 1 -${r},${r}h-${w - r}z`;
+}
+function barPathLeft(x0, y, w, h, r = 4) { // grows leftward from x0
+  if (w <= 0) return '';
+  r = Math.min(r, w, h / 2);
+  return `M${x0},${y}h-${w - r}a${r},${r} 0 0 0 -${r},${r}v${h - 2 * r}a${r},${r} 0 0 0 ${r},${r}h${w - r}z`;
+}
+
+function labelWidth(W) { return Math.min(210, Math.max(120, W * 0.3)); }
+
+function axis(svg, x, plotTop, plotBottom, ticks, fmt = v => v) {
+  for (const t of ticks) {
+    const xx = x(t);
+    el('line', { x1: xx, x2: xx, y1: plotTop, y2: plotBottom, stroke: t === 0 ? 'var(--baseline)' : 'var(--grid)', 'stroke-width': 1 }, svg);
+    const tx = el('text', { x: xx, y: plotBottom + 16, 'text-anchor': 'middle', 'font-size': 11, fill: 'var(--axis-muted)' }, svg);
+    tx.textContent = fmt(t);
+  }
+}
+
+// ---------- grouped horizontal bars ----------
+function groupedBars(host, cats, keys, data, opts = {}) {
+  host.innerHTML = '';
+  const W = host.clientWidth || 600;
+  const LW = labelWidth(W), RP = 44;
+  const barH = keys.length > 2 ? 12 : 16, gap = 2, groupPad = 16;
+  const groupH = keys.length * (barH + gap) - gap;
+  const H = cats.length * (groupH + groupPad) + 24;
+  const max = opts.max || 60;
+  const x = v => LW + (v / max) * (W - LW - RP);
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, height: H, role: 'img', 'aria-label': opts.aria || '' }, host);
+  const ticks = []; for (let t = 0; t <= max; t += 10) ticks.push(t);
+  axis(svg, x, 0, H - 24, ticks);
+  cats.forEach((c, i) => {
+    const y0 = i * (groupH + groupPad) + groupPad / 2;
+    const lab = el('text', { x: LW - 10, y: y0 + groupH / 2 + 4, 'text-anchor': 'end', 'font-size': 13, fill: 'var(--text-primary)' }, svg);
+    lab.textContent = c;
+    keys.forEach((k, j) => {
+      const v = data[k][i], y = y0 + j * (barH + gap);
+      el('path', { d: barPath(x(0), y, x(v) - x(0), barH), fill: SERIES[k].color }, svg);
+      if (j === 0 || opts.labelAll) {
+        const t = el('text', { x: x(v) + 5, y: y + barH / 2 + 4, 'font-size': 11, fill: 'var(--text-secondary)', 'font-weight': j === 0 ? 600 : 400 }, svg);
+        t.textContent = f2(v);
+      }
+    });
+    const hit = el('rect', { x: 0, y: y0 - groupPad / 2, width: W, height: groupH + groupPad, fill: 'transparent' }, svg);
+    hit.addEventListener('mousemove', ev => {
+      hit.setAttribute('fill', 'var(--border)');
+      showTip(ev, c, keys.map(k => ({ label: SERIES[k].name, value: f2(data[k][i]), color: SERIES[k].color })));
+    });
+    hit.addEventListener('mouseleave', () => { hit.setAttribute('fill', 'transparent'); hideTip(); });
+  });
+}
+
+// ---------- gap bars (single series, from zero) ----------
+function gapBars(host, against) {
+  host.innerHTML = '';
+  const rows = STDS.map((c, i) => ({ c, v: STD.district[i] - STD[against][i], d: STD.district[i], o: STD[against][i] }))
+    .sort((a, b) => a.v - b.v);
+  const W = host.clientWidth || 600, LW = labelWidth(W), RP = 56;
+  const barH = 18, step = 30, H = rows.length * step + 24;
+  const lo = -10, hi = 4;
+  const x = v => LW + ((v - lo) / (hi - lo)) * (W - LW - RP);
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, height: H, role: 'img', 'aria-label': 'ส่วนต่างคะแนนรายมาตรฐาน' }, host);
+  axis(svg, x, 0, H - 24, [-10, -8, -6, -4, -2, 0, 2, 4], t => (t > 0 ? '+' : '') + t);
+  rows.forEach((r, i) => {
+    const y = i * step + (step - barH) / 2;
+    const lab = el('text', { x: LW - 10, y: y + barH / 2 + 4, 'text-anchor': 'end', 'font-size': 13, fill: 'var(--text-primary)' }, svg);
+    lab.textContent = r.c;
+    const d = r.v < 0 ? barPathLeft(x(0), y, x(0) - x(r.v), barH) : barPath(x(0), y, x(r.v) - x(0), barH);
+    el('path', { d, fill: 'var(--s-district)' }, svg);
+    const t = el('text', { x: r.v < 0 ? x(r.v) - 5 : x(r.v) + 5, y: y + barH / 2 + 4, 'text-anchor': r.v < 0 ? 'end' : 'start', 'font-size': 12, 'font-weight': 600, fill: 'var(--text-primary)' }, svg);
+    t.textContent = sgn(r.v);
+    const hit = el('rect', { x: 0, y: i * step, width: W, height: step, fill: 'transparent' }, svg);
+    hit.addEventListener('mousemove', ev => {
+      hit.setAttribute('fill', 'var(--border)');
+      showTip(ev, r.c, [
+        { label: 'เขต 2', value: f2(r.d), color: SERIES.district.color },
+        { label: SERIES[against].name, value: f2(r.o), color: SERIES[against].color },
+        { label: 'ส่วนต่าง', value: sgn(r.v) },
+      ]);
+    });
+    hit.addEventListener('mouseleave', () => { hit.setAttribute('fill', 'transparent'); hideTip(); });
+  });
+}
+
+// ---------- school chart: bars + reference markers ----------
+function schoolChart(host, s) {
+  host.innerHTML = '';
+  const W = host.clientWidth || 600, LW = labelWidth(W), RP = 64;
+  const barH = 18, step = 34, H = STDS.length * step + 24, max = 80;
+  const x = v => LW + (v / max) * (W - LW - RP);
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, height: H, role: 'img', 'aria-label': 'คะแนนรายมาตรฐานของ ' + s.name }, host);
+  const ticks = []; for (let t = 0; t <= max; t += 10) ticks.push(t);
+  axis(svg, x, 0, H - 24, ticks);
+  STDS.forEach((c, i) => {
+    const y = i * step + (step - barH) / 2, v = s.std[i], cy = y + barH / 2;
+    const lab = el('text', { x: LW - 10, y: cy + 4, 'text-anchor': 'end', 'font-size': 13, fill: 'var(--text-primary)' }, svg);
+    lab.textContent = c;
+    el('path', { d: barPath(x(0), y, x(v) - x(0), barH), fill: 'var(--s-school)' }, svg);
+    const dx = x(STD.district[i]), nx = x(STD.nation[i]);
+    el('circle', { cx: dx, cy, r: 6, fill: 'var(--s-district)', stroke: 'var(--surface-1)', 'stroke-width': 2 }, svg);
+    el('path', { d: `M${nx},${cy - 7}L${nx + 7},${cy}L${nx},${cy + 7}L${nx - 7},${cy}Z`, fill: 'var(--s-nation)', stroke: 'var(--surface-1)', 'stroke-width': 2 }, svg);
+    const t = el('text', { x: W, y: cy + 4, 'text-anchor': 'end', 'font-size': 12, 'font-weight': 600, fill: 'var(--text-primary)' }, svg);
+    t.textContent = f2(v);
+    const hit = el('rect', { x: 0, y: i * step, width: W, height: step, fill: 'transparent' }, svg);
+    hit.addEventListener('mousemove', ev => {
+      hit.setAttribute('fill', 'var(--border)');
+      showTip(ev, c, [
+        { label: s.name, value: f2(v), color: 'var(--s-school)' },
+        { label: 'เขต 2', value: f2(STD.district[i]), color: SERIES.district.color },
+        { label: 'ประเทศ', value: f2(STD.nation[i]), color: SERIES.nation.color },
+        { label: 'ส่วนต่างจากประเทศ', value: sgn(v - STD.nation[i]) },
+      ]);
+    });
+    hit.addEventListener('mouseleave', () => { hit.setAttribute('fill', 'transparent'); hideTip(); });
+  });
+}
+
+// ---------- simple data tables ----------
+function dataTable(host, cats, keys, data) {
+  host.innerHTML = `<table><thead><tr><th></th>${keys.map(k => `<th>${SERIES[k].name}</th>`).join('')}</tr></thead><tbody>` +
+    cats.map((c, i) => `<tr><td>${c}</td>${keys.map(k => `<td>${f2(data[k][i])}</td>`).join('')}</tr>`).join('') + '</tbody></table>';
+}
+
+// ---------- tiles ----------
+document.getElementById('tiles').innerHTML =
+  `<div class="tile"><div class="k">ผู้เข้าสอบ</div><div class="v">512</div><div class="d">32 โรงเรียน · เล็ก 208 / กลาง 304 คน</div></div>` +
+  STRANDS.map((s, i) => {
+    const d = STRAND.district[i] - STRAND.nation[i], p = STRAND.district[i] - STRAND.province[i];
+    return `<div class="tile"><div class="k">${s}</div><div class="v">${f2(STRAND.district[i])}</div>
+      <div class="d">เทียบประเทศ <span class="${d < 0 ? 'neg' : 'pos'}">${d < 0 ? '▼' : '▲'} ${sgn(d)}</span> ·
+      จังหวัด <span class="${p < 0 ? 'neg' : 'pos'}">${p < 0 ? '▼' : '▲'} ${sgn(p)}</span></div></div>`;
+  }).join('');
+
+document.getElementById('t-sd').innerHTML = `<table><thead><tr><th>S.D.</th><th>เขต 2</th><th>จังหวัด</th><th>ประเทศ</th></tr></thead><tbody>` +
+  STRANDS.map((s, i) => `<tr><td>${s}</td><td>${f2(STRAND.sdDistrict[i])}</td><td>${f2(STRAND.sdProvince[i])}</td><td>${f2(STRAND.sdNation[i])}</td></tr>`).join('') + '</tbody></table>';
+
+document.querySelectorAll('[data-legend]').forEach(l => {
+  l.innerHTML = l.dataset.legend.split(',').map(k => `<span>${swatch(SERIES[k].color)}${SERIES[k].name}</span>`).join('');
+});
+dataTable(document.getElementById('t-strand'), STRANDS, ['district', 'province', 'nation'], STRAND);
+dataTable(document.getElementById('t-std'), STDS, ['district', 'province', 'nation'], STD);
+dataTable(document.getElementById('t-size'), STDS, ['small', 'medium', 'nation'], STD);
+
+// ---------- school table ----------
+let mode = 'strand', sortKey = 'avg', sortAsc = false, selected = SCHOOLS.find(s => s.name.includes('โคกทุ่งน้อย'));
+const sel = document.getElementById('schoolSel');
+sel.innerHTML = [...SCHOOLS].sort((a, b) => a.name.localeCompare(b.name, 'th'))
+  .map(s => `<option value="${s.code}">${s.name}</option>`).join('');
+
+function cols() {
+  const base = [{ k: 'name', l: 'โรงเรียน' }, { k: 'amp', l: 'อำเภอ' }, { k: 'size', l: 'ขนาด' }, { k: 'n', l: 'ผู้สอบ' }];
+  if (mode === 'strand') return base.concat(STRAND_SHORT.map((l, i) => ({ k: 's' + i, l, i, nat: STRAND.nation[i] })), [{ k: 'avg', l: 'เฉลี่ย 3 สาระ' }]);
+  return base.concat(STD_SHORT.map((l, i) => ({ k: 'd' + i, l, i, nat: STD.nation[i] })));
+}
+function val(s, k) {
+  if (k[0] === 's' && k.length === 2) return s.strand[+k[1]];
+  if (k[0] === 'd' && k.length === 2) return s.std[+k[1]];
+  return s[k];
+}
+function heat(v) { const a = Math.min(v / 60, 1) * 0.55; return `background:rgba(var(--heat),${a.toFixed(3)})`; }
+function renderTable() {
+  const amp = document.getElementById('fAmp').value, size = document.getElementById('fSize').value;
+  const q = document.getElementById('fQ').value.trim();
+  const cs = cols();
+  if (!cs.some(c => c.k === sortKey)) { sortKey = 'n'; sortAsc = false; }
+  const rows = SCHOOLS.filter(s => (!amp || s.amp === amp) && (!size || s.size === size) && (!q || s.name.includes(q)))
+    .sort((a, b) => { const x = val(a, sortKey), y = val(b, sortKey);
+      const r = typeof x === 'string' ? x.localeCompare(y, 'th') : x - y; return sortAsc ? r : -r; });
+  const t = document.getElementById('schoolTable');
+  t.innerHTML = `<thead><tr>${cs.map(c => `<th data-k="${c.k}" class="${c.k === sortKey ? 'sorted' + (sortAsc ? ' asc' : '') : ''}">${c.l}</th>`).join('')}</tr></thead><tbody>` +
+    rows.map(s => `<tr data-code="${s.code}">${cs.map(c => {
+      const v = val(s, c.k);
+      if (c.k === 'name') return `<td class="name">${s.name}${s.n < 10 ? ' <span class="tag">(ผู้สอบ &lt;10)</span>' : ''}</td>`;
+      if (typeof v === 'string' || c.k === 'n') return `<td>${v}</td>`;
+      const hi = c.nat !== undefined && v >= c.nat;
+      return `<td class="${hi ? 'hi' : ''}" style="${heat(v)}">${f2(v)}</td>`;
+    }).join('')}</tr>`).join('') + '</tbody>';
+  t.querySelectorAll('th').forEach(th => th.addEventListener('click', () => {
+    if (sortKey === th.dataset.k) sortAsc = !sortAsc; else { sortKey = th.dataset.k; sortAsc = th.dataset.k === 'name'; }
+    renderTable();
+  }));
+  t.querySelectorAll('tbody tr').forEach(tr => tr.addEventListener('click', () => {
+    selected = SCHOOLS.find(s => s.code === tr.dataset.code); sel.value = selected.code; renderSchool();
+    document.getElementById('c-school').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }));
+}
+function renderSchool() {
+  sel.value = selected.code;
+  const s = selected, d = s.strand.map((v, i) => v - STRAND.nation[i]);
+  document.getElementById('schoolInfo').innerHTML =
+    `อ.${s.amp} · ขนาด${s.size} · ผู้สอบ ${s.n} คน${s.n < 10 ? ' (จำนวนน้อย ควรตีความอย่างระวัง)' : ''} · สาระ 1/2/3 = ${s.strand.map(f2).join(' / ')} ` +
+    `(เทียบประเทศ ${d.map(v => `<span class="${v < 0 ? 'neg' : 'pos'}">${sgn(v)}</span>`).join(' / ')})`;
+  schoolChart(document.getElementById('c-school'), s);
+}
+sel.addEventListener('change', () => { selected = SCHOOLS.find(s => s.code === sel.value); renderSchool(); });
+['fAmp', 'fSize'].forEach(id => document.getElementById(id).addEventListener('change', renderTable));
+document.getElementById('fQ').addEventListener('input', renderTable);
+document.querySelectorAll('[data-mode]').forEach(b => b.addEventListener('click', () => {
+  mode = b.dataset.mode;
+  document.querySelectorAll('[data-mode]').forEach(x => x.setAttribute('aria-pressed', x === b));
+  renderTable();
+}));
+
+let gapAgainst = 'nation';
+document.querySelectorAll('[data-gap]').forEach(b => b.addEventListener('click', () => {
+  gapAgainst = b.dataset.gap;
+  document.querySelectorAll('[data-gap]').forEach(x => x.setAttribute('aria-pressed', x === b));
+  document.getElementById('gapLabel').textContent = gapAgainst === 'nation' ? 'ระดับประเทศ' : 'จังหวัด';
+  gapBars(document.getElementById('c-gap'), gapAgainst);
+}));
+
+// ---------- views / routing ----------
+const VIEWS = ['overview', 'standards', 'size', 'schools', 'insights'];
+function renderCharts(v) {
+  if (v === 'overview') groupedBars(document.getElementById('c-strand'), STRANDS, ['district', 'province', 'nation'], STRAND, { max: 40, aria: 'คะแนนรายสาระ' });
+  if (v === 'standards') { groupedBars(document.getElementById('c-std'), STDS, ['district', 'province', 'nation'], STD, { max: 40, aria: 'คะแนนรายมาตรฐาน' }); gapBars(document.getElementById('c-gap'), gapAgainst); }
+  if (v === 'size') groupedBars(document.getElementById('c-size'), STDS, ['small', 'medium', 'nation'], STD, { max: 40, aria: 'คะแนนตามขนาดโรงเรียน' });
+  if (v === 'schools') { renderTable(); renderSchool(); }
+}
+let current = 'overview';
+function route() {
+  const h = location.hash.slice(1);
+  current = VIEWS.includes(h) ? h : 'overview';
+  VIEWS.forEach(v => document.getElementById('v-' + v).classList.toggle('active', v === current));
+  document.querySelectorAll('nav.tabs a').forEach(a => a.classList.toggle('active', a.dataset.view === current));
+  renderCharts(current);
+}
+addEventListener('hashchange', route);
+let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => renderCharts(current), 120); });
+
+// ---------- theme ----------
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+  try { localStorage.setItem('onet-theme', root.dataset.theme); } catch (e) {}
+});
+try { const t = localStorage.getItem('onet-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+
+route();
+</script>
+</body>
+</html>
